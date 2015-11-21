@@ -124,7 +124,63 @@ describe('DataGrid Test Suite -  Row Style',function() {
 
 	})
 
-	it('check column style works',function() {
+    it('check set height in rowStyle function works',function() {
+        var data = generateMockData({type : 'local', len : 10})
+
+        var rowStyle = function(data, props){
+            var style = {}
+            if (props.index % 2 == 0){
+                style.height = 40
+            }
+            else
+            {
+                style.height = 50
+            }
+            return style
+        }
+
+        // table
+        var table = render(
+            DataGrid({
+                idProperty: 'id',
+                dataSource: data,
+                columns   : columns,
+                rowHeight : 20,
+                rowStyle  : rowStyle
+            })
+        );
+
+        var rows = tryWithClass(table,ROW_CLASS)
+        rows.forEach(function(row,index) {
+            if(index % 2 == 0) {
+                window.getComputedStyle(row.getDOMNode()).getPropertyValue('height').should.equal('40px')
+            }
+            else {
+                window.getComputedStyle(row.getDOMNode()).getPropertyValue('height').should.equal('50px')
+            }
+        })
+    })
+
+    it('check set rowHeight works',function() {
+        var data = generateMockData({type : 'local', len : 10})
+
+        // table
+        var table = render(
+            DataGrid({
+                idProperty: 'id',
+                dataSource: data,
+                columns   : columns,
+                rowHeight : 20
+            })
+        );
+
+        var rows = tryWithClass(table,ROW_CLASS)
+        rows.forEach(function(row) {
+            window.getComputedStyle(row.getDOMNode()).getPropertyValue('height').should.equal('20px')
+        })
+    })
+
+    it('check column style works',function() {
 
 		var COL_COLOR = 'blue'
 		var COL_COLOR_INDEX = 4
